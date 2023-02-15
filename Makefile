@@ -6,16 +6,20 @@ CODE_ANALYZER_WITH_PATH=${CODE_ANALYZER} /code/tests /code/app /code/database --
 help: # Show help for each of the Makefile recipes.
 	@grep -E '^[a-zA-Z0-9 -]+:.*#'  Makefile | sort | while read -r l; do printf "\033[1;32m$$(echo $$l | cut -f 1 -d':')\033[00m:$$(echo $$l | cut -f 2- -d'#')\n"; done
 
+composer_install:
+	@if [ ! -d "./vendor" ]; then 				 \
+  		${DOCKER_COMPOSE_EXEC} composer install; \
+	fi
+
 test_env_up: # Levanta el contenedor de php para testing
 	${DOCKER_COMPOSE} up app -d
-	${DOCKER_COMPOSE_EXEC} composer install
 
 mysql_up: # Levantamos el contenedor de mysql
 	${DOCKER_COMPOSE} up db -d
 	echo "Esperando aprovisionamiento de base de datos"
 	sleep 10
 
-tests: tests test_env_up # Lanza la suits de test con cobertura
+tests: tests test_env_up composer_install # Lanza la suits de test con cobertura
 	${CODE_ANALYZER_WITH_PATH} --level 5
 	${DOCKER_COMPOSE_EXEC} bash -c "XDEBUG_MODE=coverage ./artisan test --coverage --coverage-html coverage"
 
@@ -28,9 +32,10 @@ migration: test_env_up mysql_up # Lanzamos migraciones mediante artisan
 phpstan_generate_baseline: # Genera un fichero para omitir ciertos avisos del analizador
 	${CODE_ANALYZER_WITH_PATH} --level 5 --generate-baseline /code/phpstan-baseline.neon
 
-run: # Levantamos el servidor Web
+up:
 	${DOCKER_COMPOSE} up server -d
-	${DOCKER_COMPOSE_EXEC} composer install
+
+run: up composer_install # Levantamos el servidor Web
 	cp .env.dist .env
 	echo "Esperando aprovisionamiento de base de datos"
 	sleep 10
