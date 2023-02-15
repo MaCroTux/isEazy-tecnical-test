@@ -7,8 +7,16 @@ help: # Show help for each of the Makefile recipes.
 test_env_up: # Levanta el contenedor de php para testing
 	${DOCKER_COMPOSE} up app -d
 
+mysql_up: # Levantamos el contenedor de mysql
+	${DOCKER_COMPOSE} up db -d
+	echo "Esperando aprovisionamiento de base de datos"
+	sleep 10
+
 tests: tests test_env_up # Lanza la suits de test con cobertura
 	${DOCKER_COMPOSE_EXEC} bash -c "XDEBUG_MODE=coverage ./artisan test --coverage"
 
 artisan: test_env_up # Lanza comandos de artisan con argumentos como make artisan $ARGS="about"
 	${DOCKER_COMPOSE_EXEC} ./artisan ${ARGS}
+
+migration: test_env_up mysql_up
+	${DOCKER_COMPOSE_EXEC} ./artisan "migrate"

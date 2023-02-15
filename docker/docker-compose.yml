@@ -8,3 +8,21 @@ services:
         restart: unless-stopped
         volumes:
             - ../:/var/www
+        networks:
+            - app-network
+
+    db:
+        container_name: mysql
+        image: arm64v8/mysql
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: laravel
+            MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+        networks:
+            - app-network
+        links:
+            - phpmyadmin
+
+networks:
+    app-network:
+        driver: bridge

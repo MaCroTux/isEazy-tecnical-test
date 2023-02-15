@@ -41,3 +41,15 @@ Lazar test con detalle sobre cobertura:
 ```shell
 make tests
 ```
+
+## Base de datos
+
+Dado el modelo de los requisitos, vamos a crear una realización de muchos a 
+muchos con una tabla intermedia donde almacenaremos el stock de los productos
+
+Crearemos los modelos junto a sus migraciones de este modo:
+```shell
+make artisan ARGS="make:model Shop -m" 
+make artisan ARGS="make:model Product -m" 
+make artisan ARGS="make:model Stock -m" 
+```
