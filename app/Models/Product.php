@@ -10,12 +10,6 @@ class Product extends Model
 {
     use HasFactory;
 
-    public function shops(): BelongsToMany
-    {
-        return $this->belongsToMany(Shop::class, Stock::class)
-            ->withPivot('stock');
-    }
-
     /**
      * Generamos un método toArray custom para poder devolver los datos que necesitamos en las respuestas
      *

@@ -74,3 +74,7 @@ Se ha dividido la lógica de la aplicación en:
 Nota: La parte de DB sigue acoplada a eloquent, no debería ser un problema pero se
 podría encapsular en repositorios, se descarta debido a o extenso que se está 
 haciendo la prueba
+
+## Cobertura de test
+
+Se ha mejorado la cubertura en un 98%
