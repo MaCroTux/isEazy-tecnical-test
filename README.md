@@ -53,3 +53,13 @@ make artisan ARGS="make:model Shop -m"
 make artisan ARGS="make:model Product -m" 
 make artisan ARGS="make:model Stock -m" 
 ```
+
+## Servidor web
+
+Mediante makefile podemos lanzar el servidor nginx local para realizar pruebas
+manuales e interactuar con la api
+```shell
+make run
+```
+
+Abrir el terminar y escribir `http://localhost/api/shops`

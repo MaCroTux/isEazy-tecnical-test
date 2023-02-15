@@ -8,6 +8,7 @@ help: # Show help for each of the Makefile recipes.
 
 test_env_up: # Levanta el contenedor de php para testing
 	${DOCKER_COMPOSE} up app -d
+	${DOCKER_COMPOSE_EXEC} composer install
 
 mysql_up: # Levantamos el contenedor de mysql
 	${DOCKER_COMPOSE} up db -d
@@ -22,7 +23,16 @@ artisan: test_env_up # Lanza comandos de artisan con argumentos como make artisa
 	${DOCKER_COMPOSE_EXEC} ./artisan ${ARGS}
 
 migration: test_env_up mysql_up # Lanzamos migraciones mediante artisan
-	${DOCKER_COMPOSE_EXEC} ./artisan "migrate"
+	${DOCKER_COMPOSE_EXEC} ./artisan migrate
 
 phpstan_generate_baseline: # Genera un fichero para omitir ciertos avisos del analizador
 	${CODE_ANALYZER_WITH_PATH} --level 5 --generate-baseline /code/phpstan-baseline.neon
+
+run: # Levantamos el servidor Web
+	${DOCKER_COMPOSE} up server -d
+	${DOCKER_COMPOSE_EXEC} composer install
+	cp .env.dist .env
+	echo "Esperando aprovisionamiento de base de datos"
+	sleep 10
+	${DOCKER_COMPOSE_EXEC} ./artisan migrate
+	${DOCKER_COMPOSE_EXEC} ./artisan db:seed

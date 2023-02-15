@@ -1,6 +1,21 @@
 version: "3.8"
 
 services:
+    server:
+        container_name: nginx
+        image: nginx:alpine
+        restart: unless-stopped
+        ports:
+            - "80:80"
+        networks:
+            - app-network
+        volumes:
+            - ../:/var/www
+            - ../docker/nginx/conf.d:/etc/nginx/conf.d/
+        links:
+            - app
+            - db
+
     app:
         container_name: laravel
         build:
@@ -20,8 +35,6 @@ services:
             MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
         networks:
             - app-network
-        links:
-            - phpmyadmin
 
 networks:
     app-network:

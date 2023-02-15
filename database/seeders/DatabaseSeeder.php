@@ -2,21 +2,28 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Product;
+use App\Models\Shop;
 use Illuminate\Database\Seeder;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DatabaseSeeder extends Seeder
 {
+    use DatabaseMigrations;
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Shop::factory(4)->create()->each(function (Shop $shop, int $index) {
+            $shop->products()->saveMany(
+                Product::factory(3)->make(),
+                [
+                    ['stock' => fake()->randomNumber()],
+                    ['stock' => fake()->randomNumber()],
+                    ['stock' => fake()->randomNumber()],
+                ]
+            );
+        });
     }
 }
