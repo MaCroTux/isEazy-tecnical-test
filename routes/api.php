@@ -1,7 +1,10 @@
 <?php
 
-use App\Http\Controllers\ShopController;
+use App\Http\Controllers\GetShopsWithProductsController;
 use App\Http\Controllers\ShoppingController;
+use App\Http\Controllers\ShowShopWithProductsController;
+use App\Http\Controllers\StoreShopWithProductsController;
+use App\Http\Controllers\UpdateShopController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/shops', [ShopController::class, 'index'])->name('shop.index');
-Route::get('/shop/{id}', [ShopController::class, 'show'])->name('shop.show');
-Route::post('/shop', [ShopController::class, 'store'])->name('/shop.store');
-Route::put('/shop', [ShopController::class, 'update'])->name('shop.edit');
+Route::get('/shops', GetShopsWithProductsController::class)->name('shop.index');
+Route::get('/shop/{id}', ShowShopWithProductsController::class)->name('shop.show');
+Route::post('/shop', StoreShopWithProductsController::class)->name('shop.store');
+Route::put('/shop', UpdateShopController::class)->name('shop.update');
 Route::post('/shopping', ShoppingController::class)->name('shopping');
 
