@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+    app:
+        container_name: laravel
+        build:
+            dockerfile: Dockerfile.dev
+        restart: unless-stopped
+        volumes:
+            - ../:/var/www

@@ -32,3 +32,12 @@ eventos, pero se evaluarán posibles usos.
 Para la puesta en marcha del proyecto en desarrollo podemos usar sail, como no 
 tenemos experiencia con esta herramienta usaremos docker-compose para despliegue
 con docker.
+
+## Testing
+
+Utilizar el comando make para el uso de las diferentes acciones
+
+Lazar test con detalle sobre cobertura:
+```shell
+make tests
+```
