@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Validation\ValidationException;
 
 class ShopController extends Controller
 {
@@ -42,5 +45,42 @@ class ShopController extends Controller
     private function isNotEmpty(Shop|Collection|null $shop): bool
     {
         return !empty($shop);
+    }
+
+    public function store(Request $request): JsonResponse
+    {
+        try {
+            $requestData = $request->validate([
+                'name' => 'required|unique:shops,name|string|max:255',
+                'products.*.name' => 'required|unique:products,name|string|max:255',
+                'products.*.stock' => 'required|numeric',
+            ]);
+        } catch (ValidationException) {
+            return response()->json([
+                'status' => 'error',
+                'msg' => 'Error wrong parameters',
+            ], 402);
+        }
+
+        $shop = new Shop;
+        $shop->setAttribute('name', $requestData['name']);
+
+        $productsToCreate = [];
+        $pivotAttribute = [];
+        foreach ($requestData['products'] as $product) {
+            $productModel = new Product;
+            $productModel->setAttribute('name',$product['name']);
+
+            $productsToCreate[] = $productModel;
+            $pivotAttribute[] = ['stock' => $product['stock']];
+        }
+
+        $shop->save();
+        $shop->products()->saveMany($productsToCreate, $pivotAttribute);
+
+        return response()->json([
+            'status' => 'saved',
+            'data' => $shop->toArray(true)
+        ], 201);
     }
 }
