@@ -63,3 +63,14 @@ make run
 ```
 
 Abrir el terminar y escribir `http://localhost/api/shops`
+
+## Lógica de dominio en capa de servicio
+
+Se ha dividido la lógica de la aplicación en:
+
+ - HTTP: Controlador
+ - Lógica de dominio: Servicios 
+
+Nota: La parte de DB sigue acoplada a eloquent, no debería ser un problema pero se
+podría encapsular en repositorios, se descarta debido a o extenso que se está 
+haciendo la prueba
