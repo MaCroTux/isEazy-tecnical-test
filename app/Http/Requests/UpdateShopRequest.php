@@ -17,6 +17,7 @@ class UpdateShopRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'required|numeric|exists:shops,id',
             'name' => 'required|string|max:255',
         ];
     }
@@ -24,9 +25,14 @@ class UpdateShopRequest extends FormRequest
     protected function failedValidation(Validator $validator): void
     {
         $response = new JsonResponse([
-            'status' => 'error',
+            'status' => key($validator->failed()) === 'id'
+                ? 'not_found'
+                : 'error',
             'msg' => 'Error wrong parameters',
-        ], 402);
+        ], key($validator->failed()) === 'id'
+            ? 404
+            : 402
+        );
 
         throw new ValidationException($validator, $response);
     }

@@ -74,16 +74,14 @@ class ShopController extends Controller
         ], 201);
     }
 
-    public function update(int $shopId, UpdateShopRequest $request): JsonResponse
+    public function update(UpdateShopRequest $request): JsonResponse
     {
-        try {
-            $shopToEdit = Shop::query()->findOrFail($shopId);
-            $shopToEdit->setAttribute('name', $request->get('name'));
-            $shopToEdit->update();
+        $requestData = $request->validated();
 
-            return response()->json(['status' => 'edited']);
-        } catch (ModelNotFoundException) {
-            return response()->json(['status' => 'not_found'], 404);
-        }
+        $shopToEdit = Shop::query()->findOrFail($requestData['id']);
+        $shopToEdit->setAttribute('name', $request->get('name'));
+        $shopToEdit->update();
+
+        return response()->json(['status' => 'edited']);
     }
 }

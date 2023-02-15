@@ -16,7 +16,7 @@ mysql_up: # Levantamos el contenedor de mysql
 
 tests: tests test_env_up # Lanza la suits de test con cobertura
 	${CODE_ANALYZER_WITH_PATH} --level 5
-	${DOCKER_COMPOSE_EXEC} bash -c "XDEBUG_MODE=coverage ./artisan test --coverage"
+	${DOCKER_COMPOSE_EXEC} bash -c "XDEBUG_MODE=coverage ./artisan test --coverage --coverage-html coverage"
 
 artisan: test_env_up # Lanza comandos de artisan con argumentos como make artisan $ARGS="about"
 	${DOCKER_COMPOSE_EXEC} ./artisan ${ARGS}

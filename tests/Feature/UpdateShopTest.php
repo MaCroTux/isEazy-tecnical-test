@@ -21,10 +21,11 @@ class UpdateShopTest extends TestCase
         Shop::factory(['id' => 10])->create();
 
         $requestData = [
+            'id' => 10,
             'name' => $shopName,
         ];
 
-        $response = $this->put('/api/shop/10', $requestData);
+        $response = $this->put('/api/shop', $requestData);
 
         $response
             ->assertStatus(200)
@@ -37,7 +38,8 @@ class UpdateShopTest extends TestCase
 
     public function test_the_application_should_throw_error_when_update_shop_with_argument_error(): void
     {
-        $response = $this->post('/api/shop', ['name' => '']);
+        Shop::factory(['id' => 1])->create();
+        $response = $this->put('/api/shop', ['id' => 1, 'name' => '']);
 
         $response
             ->assertStatus(402)
@@ -49,12 +51,14 @@ class UpdateShopTest extends TestCase
 
     public function test_the_application_return_404_when_resource_not_found(): void
     {
+        //$this->withoutExceptionHandling();
         Shop::factory(['id' => 20])->create();
         $requestData = [
+            'id' => 10,
             'name' => fake()->name(),
         ];
 
-        $response = $this->put('/api/shop/10', $requestData);
+        $response = $this->put('/api/shop', $requestData);
 
         $response
             ->assertStatus(404)
