@@ -18,5 +18,5 @@ tests: tests test_env_up # Lanza la suits de test con cobertura
 artisan: test_env_up # Lanza comandos de artisan con argumentos como make artisan $ARGS="about"
 	${DOCKER_COMPOSE_EXEC} ./artisan ${ARGS}
 
-migration: test_env_up mysql_up
+migration: test_env_up mysql_up # Lanzamos migraciones mediante artisan
 	${DOCKER_COMPOSE_EXEC} ./artisan "migrate"
