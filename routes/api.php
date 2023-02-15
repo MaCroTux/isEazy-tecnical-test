@@ -19,4 +19,5 @@ Route::get('/shops', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/shop/{id}', [ShopController::class, 'show'])->name('shop.show');
 Route::post('/shop', [ShopController::class, 'store'])->name('/shop.store');
 Route::put('/shop', [ShopController::class, 'update'])->name('shop.edit');
+Route::post('/shopping', ShoppingController::class)->name('shopping');
 

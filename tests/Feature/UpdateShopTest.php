@@ -51,7 +51,6 @@ class UpdateShopTest extends TestCase
 
     public function test_the_application_return_404_when_resource_not_found(): void
     {
-        //$this->withoutExceptionHandling();
         Shop::factory(['id' => 20])->create();
         $requestData = [
             'id' => 10,
