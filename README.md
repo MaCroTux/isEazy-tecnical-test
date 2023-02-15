@@ -62,6 +62,10 @@ manuales e interactuar con la api
 make run
 ```
 
+Nota: Esta prueba ha sido realizada con una máquina apple silicon por lo que 
+la imagen de mysql es exclusiva para arm64v8, cambiar la imagen para arquitectura
+x86 en docker-composer.yml
+
 Abrir el terminar y escribir `http://localhost/api/shops`
 
 ## Lógica de dominio en capa de servicio
