@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreShopRequest;
 use App\Models\Product;
 use App\Models\Shop;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Validation\ValidationException;
 
 class ShopController extends Controller
 {
@@ -47,20 +46,9 @@ class ShopController extends Controller
         return !empty($shop);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreShopRequest $request): JsonResponse
     {
-        try {
-            $requestData = $request->validate([
-                'name' => 'required|unique:shops,name|string|max:255',
-                'products.*.name' => 'required|unique:products,name|string|max:255',
-                'products.*.stock' => 'required|numeric',
-            ]);
-        } catch (ValidationException) {
-            return response()->json([
-                'status' => 'error',
-                'msg' => 'Error wrong parameters',
-            ], 402);
-        }
+        $requestData = $request->validated();
 
         $shop = new Shop;
         $shop->setAttribute('name', $requestData['name']);

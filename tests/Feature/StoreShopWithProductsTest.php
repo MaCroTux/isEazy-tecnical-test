@@ -59,7 +59,6 @@ class StoreShopWithProductsTest extends TestCase
         $requestData,
         $errorMessage
     ): void {
-        $this->withoutExceptionHandling();
         $response = $this->post('/api/shop', $requestData);
 
         $response
