@@ -3,12 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreShopRequest;
-use App\Models\Product;
-use App\Models\Shop;
+use App\Services\StoreShopWithProductService;
 use Illuminate\Http\JsonResponse;
 
 class StoreShopWithProductsController extends Controller
 {
+    private StoreShopWithProductService $storeShopWithProductService;
+
+    public function __construct(StoreShopWithProductService $storeShopWithProductService)
+    {
+        $this->storeShopWithProductService = $storeShopWithProductService;
+    }
+
     /**
      * Almacena una nueva tienda con array de productos
      *
@@ -19,26 +25,10 @@ class StoreShopWithProductsController extends Controller
     {
         $requestData = $request->validated();
 
-        $shop = new Shop;
-        $shop->setAttribute('name', $requestData['name']);
-
-        $productsToCreate = [];
-        $pivotAttribute = [];
-        foreach ($requestData['products'] as $product) {
-            $productModel = new Product;
-            $productModel->setAttribute('name',$product['name']);
-
-            $productsToCreate[] = $productModel;
-            $pivotAttribute[] = ['stock' => $product['stock']];
-        }
-
-        $shop->save();
-        $shop->products()->saveMany($productsToCreate, $pivotAttribute);
-
-        return response()->json([
-            'status' => 'saved',
-            'data' => $shop->toArray(true)
-        ], 201);
+        return response()->json($this->storeShopWithProductService->__invoke(
+            $requestData['name'],
+            $requestData['products']
+        ), 201);
     }
 
 }

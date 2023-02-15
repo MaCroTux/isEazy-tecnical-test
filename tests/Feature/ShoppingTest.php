@@ -41,6 +41,7 @@ class ShoppingTest extends TestCase
 
         $response->assertStatus(201)->assertExactJson([
             'status' => 'operation_applied',
+            'msg' => null
         ]);
 
         /** @var Shop $shopForAssert */

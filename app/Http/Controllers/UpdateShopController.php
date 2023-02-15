@@ -3,19 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateShopRequest;
-use App\Models\Shop;
+use App\Services\UpdateShopService;
 use Illuminate\Http\JsonResponse;
 
 class UpdateShopController extends Controller
 {
+    private UpdateShopService $updateShopService;
+
+    public function __construct(UpdateShopService $updateShopService)
+    {
+        $this->updateShopService = $updateShopService;
+    }
+
     public function __invoke(UpdateShopRequest $request): JsonResponse
     {
         $requestData = $request->validated();
 
-        $shopToEdit = Shop::query()->findOrFail($requestData['id']);
-        $shopToEdit->setAttribute('name', $request->get('name'));
-        $shopToEdit->update();
-
-        return response()->json(['status' => 'edited']);
+        return response()->json(
+            $this->updateShopService->__invoke(
+                $requestData['id'],
+                $requestData['name']
+            )
+        );
     }
 }

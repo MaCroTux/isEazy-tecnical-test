@@ -2,11 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Shop;
+use App\Services\ShopWithProductListService;
 use Illuminate\Http\JsonResponse;
 
 class GetShopsWithProductsController extends Controller
 {
+    private ShopWithProductListService $shopWithProductListService;
+
+    public function __construct(ShopWithProductListService $shopWithProductListService)
+    {
+        $this->shopWithProductListService = $shopWithProductListService;
+    }
+
     /**
      * Listado de tiendas con productos relacionados
      *
@@ -15,7 +22,7 @@ class GetShopsWithProductsController extends Controller
     public function __invoke(): JsonResponse
     {
         return response()->json(
-            Shop::query()->with('products')->get()->toArray()
+            $this->shopWithProductListService->__invoke()
         );
     }
 }

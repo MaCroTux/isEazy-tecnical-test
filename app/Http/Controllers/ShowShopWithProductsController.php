@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Shop;
-use Illuminate\Database\Eloquent\Collection;
+use App\Services\ShowShopWithProductsService;
 use Illuminate\Http\JsonResponse;
 
 class ShowShopWithProductsController extends Controller
 {
+    private ShowShopWithProductsService $showShopWithProductsService;
+
+    public function __construct(ShowShopWithProductsService $showShopWithProductsService)
+    {
+        $this->showShopWithProductsService = $showShopWithProductsService;
+    }
+
     /**
      * Devuelve detalle de la tienda, productos y sus respectivos stocks
      *
@@ -16,18 +22,8 @@ class ShowShopWithProductsController extends Controller
      */
     public function __invoke(int $tiendaId): JsonResponse
     {
-        /** @var Shop $shop */
-        $shop = Shop::query()->with('products')->find($tiendaId);
-
         return response()->json(
-            $this->isNotEmpty($shop)
-                ? $shop->toArray(true)
-                : []
+            $this->showShopWithProductsService->__invoke($tiendaId)
         );
-    }
-
-    private function isNotEmpty(Shop|Collection|null $shop): bool
-    {
-        return !empty($shop);
     }
 }
